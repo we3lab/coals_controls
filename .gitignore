@@ -1,0 +1,17 @@
+# Data Files #
+*.xls
+*.xlsx
+*.csv
+*.pdf
+*.accdb
+
+# Image Files #
+*.ai
+*.tif
+
+# IDE Files #
+Code/venv/
+
+# Compiled Pythyon Code Files #
+*.pyc
+*.xml

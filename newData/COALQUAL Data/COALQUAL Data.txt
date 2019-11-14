@@ -1,0 +1,4 @@
+COALQUAL data downloaded on November 30, 2017 from USGS.
+
+Website https://ncrdspublic.er.usgs.gov/coalqual/ with no filters applied.  Downloaded files includes "Sample Description" 
+and "Trace Element" files.
