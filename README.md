@@ -40,7 +40,11 @@ To requiest a feature, create an issue in the GitHub Repository.  Please use the
   <li> Jiachen Liu, Carnegie Mellon University, jiachen6@andrew.cmu.edu </li>
   <li> Daniel Gingerich, Stanford University, dbginger@stanford.edu </li>
   </ul>
-  
+
+## Citation
+To cite the COALS Control Tool, use the following citation:
+Liu, J., & Gingerich, D. B. (2019, November 14). COntaminant behavior in Air, Liquids, and Solids (COALS) Controls Tool.  DOI: 10.17605/OSF.IO/6RFE8. 
+
 ## License
 
 This project is licensed under the MIT License - see the <a href="https://github.com/we3lab/coals_controls/blob/master/LICENSE"> LICENSE.md </a> file for details.
