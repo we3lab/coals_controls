@@ -15,7 +15,7 @@ A user can specify the rank of coal combusted, the amount of electricity generat
 For more information on the tool (including a list of the papers underlying the trace element partitioning behavior models) and how to use the GUI, please see the <a href="https://osf.io/6rfe8/"> Open Science Foundation project </a>.
 
 ## Getting Started
-These instructions will get you a copy of hte project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Creating an instance of the GUI using Python
 To create the GUI using Python (rather than by installing the GUI), run the trace_element_GUI.py file located in the Code/GUI directory.
