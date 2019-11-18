@@ -26,7 +26,7 @@ To install the COALS Controls GUI download the COALS Controls Model.msi file.  A
 This GUI is currently only for Windows machines.  An Apple version is currently in development.
 
 ## Contributing
-Please read CONTRIBUTING.md for details of our code of conduct, and the process for submitting pull requests to us.
+Please read <a href="https://github.com/we3lab/coals_controls/blob/master/CONTRIBUTING.md"> CONTRIBUTING.md </a> for details of our code of conduct, and the process for submitting pull requests to us.
 
 ### Reporting a Bug
 To report a bug, create an issue in the GitHub Repository.  Please use the <a href="https://github.com/we3lab/coals_controls/issues/new?assignees=&labels=&template=bug_report.md&title="> Bug Report template </a>.
