@@ -10,7 +10,7 @@ The *CO*ntaminant behavior in *A*ir, *L*iquids, and *S*olids (COALS) Controls To
   <li> Mercury </li>
   <li> Selenium </li>
   </ul>
-A user can specify the rank of coal combusted, the amount of electricity generated, and installed air pollution and water pollution control devices.  The model then returns the amount of trace elements that leave the coal-fired power plant in the gas (i.e., exhaust gas), solid (i.e., bottom ash, fly ash, and gypsum), and liquid (i.e., FGD wastewater).  The model also additionally reports the estimated concentration of FGD wastweater and whether the water pollution treatment technologies htat are installed will be sufficient to achieve compliance with the Effluent Limitation Guidelines and Standards.
+A user can specify the rank of coal combusted, the amount of electricity generated, and installed air pollution and water pollution control devices.  The model then returns the amount of trace elements that leave the coal-fired power plant in the gas (i.e., exhaust gas), solid (i.e., bottom ash, fly ash, and gypsum), and liquid (i.e., FGD wastewater).  The model also additionally reports the estimated concentration of FGD wastweater and whether the water pollution treatment technologies that are installed will be sufficient to achieve compliance with the Effluent Limitation Guidelines and Standards.
 
 For more information on the tool (including a list of the papers underlying the trace element partitioning behavior models) and how to use the GUI, please see the <a href="https://osf.io/6rfe8/"> Open Science Foundation project </a>.
 
@@ -26,7 +26,6 @@ To install the COALS Controls GUI download the COALS Controls Model.msi file.  A
 This GUI is currently only for Windows machines.  An Apple version is currently in development.
 
 ## Contributing
-
 Please read CONTRIBUTING.md for details of our code of conduct, and the process for submitting pull requests to us.
 
 ### Reporting a Bug
@@ -46,7 +45,6 @@ To cite the COALS Control Tool, use the following citation:
 Liu, J., & Gingerich, D. B. (2019, November 14). COntaminant behavior in Air, Liquids, and Solids (COALS) Controls Tool.  DOI: 10.17605/OSF.IO/6RFE8. 
 
 ## License
-
 This project is licensed under the MIT License - see the <a href="https://github.com/we3lab/coals_controls/blob/master/LICENSE"> LICENSE.md </a> file for details.
 
 ## Acknowledgements
