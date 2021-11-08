@@ -25,6 +25,9 @@ from WPCD_partition_modeling import cp_modeling, mbr_modeling, bt_modeling, mvc_
 from mass_partitioning_calculation import apcd_mass_partitioning, wpcd_mass_partitioning
 from elg_compliance_check import elg_compliance_check
 from median_partitioning_scenario import partitioning_scenario
+from wastewater_treatment_cost_models import chemical_precipitation_costs, biological_treatment_costs, \
+    thermal_evaporation_costs, pretreated_membrane_filtration_costs, non_pretreated_membrane_filtration_costs, \
+    zero_valent_iron_costs
 
 
 fileDir = pathlib.Path(__file__).parents[2]
@@ -1077,3 +1080,161 @@ if wetFGD == 1:
     fig.savefig(str(chemical_consumption_cdfs), bbox_inches='tight')
     ax.clear()
     plt.close()
+
+    # Now let's calculate the costs associated with treating this water.
+
+    discount_rate = float(input('What is the discount rate for the costing analysis [in %]?'))
+    discount_rate_decimal = discount_rate / 100
+    project_lifespan = float(input('What is the lifespan of the project [in years]'))
+
+    if cp == 1:
+        cp_cap_costs, cp_om_costs, cp_present_om_costs, cp_npc = chemical_precipitation_costs(wastewater_production,
+                                                                                              project_lifespan,
+                                                                                              discount_rate_decimal)
+    else:
+        cp_cap_costs = 0
+        cp_om_costs = 0
+        cp_present_om_costs = 0
+        cp_npc = 0
+
+    if bt == 1:
+        bt_cap_costs, bt_om_costs, bt_present_om_costs, bt_npc = biological_treatment_costs(wastewater_production,
+                                                                                            project_lifespan,
+                                                                                            discount_rate_decimal)
+    else:
+        bt_cap_costs = 0
+        bt_om_costs = 0
+        bt_present_om_costs = 0
+        bt_npc = 0
+
+    if mvc == 1:
+        mvc_cap_costs, mvc_om_costs, mvc_present_om_costs, mvc_npc = thermal_evaporation_costs(wastewater_production,
+                                                                                               project_lifespan,
+                                                                                               discount_rate_decimal)
+    else:
+        mvc_cap_costs = 0
+        mvc_om_costs = 0
+        mvc_present_om_costs = 0
+        mvc_npc = 0
+
+    if ro == 1 and (cp == 1 or bt == 1):
+        ro_cap_costs, ro_om_costs, ro_present_om_costs, ro_npc = pretreated_membrane_filtration_costs(
+            wastewater_production, project_lifespan, discount_rate_decimal)
+    elif ro == 1:
+        ro_cap_costs, ro_om_costs, ro_present_om_costs, ro_npc = non_pretreated_membrane_filtration_costs(
+            wastewater_production, project_lifespan, discount_rate_decimal)
+    else:
+        ro_cap_costs = 0
+        ro_om_costs = 0
+        ro_present_om_costs = 0
+        ro_npc = 0
+
+    if zvi == 1:
+        zvi_cap_costs, zvi_om_chem_costs, zvi_present_om_chem_costs, \
+        zvi_om_elec_costs, zvi_present_om_elec_costs, zvi_npc = zero_valent_iron_costs(wastewater_production,
+                                                                                            project_lifespan,
+                                                                                            discount_rate_decimal)
+    else:
+        zvi_cap_costs = 0
+        zvi_om_chem_costs = 0
+        zvi_present_om_chem_costs = 0
+        zvi_present_om_elec_costs = 0
+        zvi_om_elec_costs = 0
+        zvi_npc = 0
+
+    zvi_present_om_costs = zvi_present_om_chem_costs + zvi_present_om_elec_costs
+
+    print(cp_present_om_costs)
+
+    median_cap_costs = (np.median(cp_cap_costs/1000000), np.median(zvi_cap_costs/1000000),
+                        np.median(bt_cap_costs/1000000), np.median(mvc_cap_costs/1000000),
+                        np.median(ro_cap_costs/1000000))
+    median_op_costs = (np.median(cp_present_om_costs/1000000), np.median(zvi_present_om_costs/1000000),
+                       np.median(bt_present_om_costs/1000000), np.median(mvc_present_om_costs/1000000),
+                       np.median(ro_present_om_costs/1000000))
+    ind = [1, 2, 3, 4, 5]
+
+    p1 = plt.bar(ind, median_cap_costs)
+    p2 = plt.bar(ind, median_op_costs, bottom=median_cap_costs)
+    plt.ylabel('Total Lifecycle Costs [$M]')
+    plt.xticks(ind, ('CP', 'ZVI', 'BT', 'TE', 'MF'))
+    plt.legend((p1[0], p2[0]), ('Capital', 'O&M'))
+    plt.show()
+    Treatment_Cost_Boxplot = fileDir / 'Results' / 'Treatment Cost Boxplot.pdf'
+    plt.savefig(str(Treatment_Cost_Boxplot), bbox_inches='tight')
+    plt.close
+
+    if cp == 1:
+        qe_cp_cap_costs, pe_cp_cap_costs = ecdf(cp_cap_costs/1000000)
+        qe_cp_op_costs, pe_cp_op_costs = ecdf(cp_present_om_costs/1000000)
+    else:
+        qe_cp_cap_costs = [0, 0]
+        pe_cp_cap_costs = [0, 1]
+        qe_cp_op_costs = [0, 0]
+        pe_cp_op_costs = [0, 1]
+
+    if bt == 1:
+        qe_bt_cap_costs, pe_bt_cap_costs = ecdf(bt_cap_costs/1000000)
+        qe_bt_op_costs, pe_bt_op_costs = ecdf(bt_present_om_costs/1000000)
+    else:
+        qe_bt_cap_costs = [0, 0]
+        pe_bt_cap_costs = [0, 1]
+        qe_bt_op_costs = [0, 0]
+        pe_bt_op_costs = [0, 1]
+
+    if mvc == 1:
+        qe_mvc_cap_costs, pe_mvc_cap_costs = ecdf(mvc_cap_costs/1000000)
+        qe_mvc_op_costs, pe_mvc_op_costs = ecdf(mvc_present_om_costs/1000000)
+    else:
+        qe_mvc_cap_costs = [0, 0]
+        pe_mvc_cap_costs = [0, 1]
+        qe_mvc_op_costs = [0, 0]
+        pe_mvc_op_costs = [0, 1]
+
+    if ro == 1:
+        qe_ro_cap_costs, pe_ro_cap_costs = ecdf(ro_cap_costs/1000000)
+        qe_ro_op_costs, pe_ro_op_costs = ecdf(ro_present_om_costs/1000000)
+    else:
+        qe_ro_cap_costs = [0, 0]
+        pe_ro_cap_costs = [0, 1]
+        qe_ro_op_costs = [0, 0]
+        pe_ro_op_costs = [0, 1]
+
+    fig, ax = plt.subplots(1, 1)
+    fig.figsize = (2.8,2.8)
+    ax.plot(qe_cp_cap_costs, pe_cp_cap_costs, color=[228/255, 26/255, 28/255], label='CP Capital')
+    ax.plot(qe_cp_op_costs, pe_cp_op_costs, ls=':', color=[228/255, 26/255, 28/255], label='CP O&M')
+    ax.plot(qe_bt_cap_costs, pe_bt_cap_costs, color=[55/255, 126/255, 184/255], label='BT Capital')
+    ax.plot(qe_bt_op_costs, pe_bt_op_costs, ls=':', color=[55 / 255, 126 / 255, 184 / 255], label='BT O&M')
+    ax.plot(qe_mvc_cap_costs, pe_mvc_cap_costs, color=[77/255, 175/255, 74/255], label='TE Capital')
+    ax.plot(qe_mvc_op_costs, pe_mvc_op_costs, ls=':', color=[77/255, 175/255, 74/255], label='TE O&M')
+    ax.plot(qe_ro_cap_costs, pe_ro_cap_costs, color=[152/255, 78/255, 163/255], label='MF Capital')
+    ax.plot(qe_ro_op_costs, pe_ro_op_costs, color=[152/255, 78/255, 163/255], label='MF O&M')
+    ax.set_xlabel('Costs [$M]')
+    ax.set_ylabel('Cumulative Probability')
+    ax.set_ylim([0,1])
+    plt.legend()
+    #ax.set_adjustable(box = )
+    plt.show()
+    Cost_CDF = fileDir / 'Results' / 'Process Treatment Cost CDF.pdf'
+    fig.savefig(str(Cost_CDF), bbox_inches='tight')
+
+    print(np.median(zvi_present_om_elec_costs))
+
+    median_op_costs = (np.median(cp_present_om_costs/1000000), 0)
+    median_chem_costs = (0, np.median(zvi_present_om_chem_costs/1000000))
+    median_elec_costs = (0, np.median(zvi_present_om_elec_costs/1000000))
+    ind = [1, 2]
+
+    fig, ax = plt.subplots(1, 1)
+    fig.figsize = (2.8, 2.8)
+    p1 = plt.bar(ind, median_op_costs)
+    p2 = plt.bar(ind, median_chem_costs, bottom=median_op_costs)
+    p3 = plt.bar(ind, median_elec_costs, bottom=median_chem_costs)
+    plt.ylabel('Present Value of the Operating Costs [$M]')
+    plt.ylim([0, 3.5])
+    plt.yticks([0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5])
+    plt.xticks(ind, ('CP', 'ZVI'))
+    plt.legend((p1[0], p2[0], p3[0]), ('Total Op Costs', 'Chemical', 'Electrical'))
+    plt.show()
+    plt.close
